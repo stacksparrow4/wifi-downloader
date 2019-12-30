@@ -43,8 +43,8 @@ ipcMain.on('stopserver', () => {
 
 app.on('ready', () => {
     mainWin = new BrowserWindow({
-        width: 600,
-        height: 400,
+        width: 800,
+        height: 500,
         webPreferences: {
             nodeIntegration: true
         }

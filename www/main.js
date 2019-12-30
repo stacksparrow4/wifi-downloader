@@ -38,6 +38,7 @@ ipcRenderer.on('serverstopped', () => {
 })
 
 const dropArea = document.getElementById('droparea');
+const dropText = document.getElementById('droptext');
 
 ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
     dropArea.addEventListener(eventName, preventDefaults, false);
@@ -60,3 +61,18 @@ function highlight() {
 function unhighlight() {
     dropArea.classList.remove('highlight');
 }
+
+dropArea.addEventListener('drop', ({ dataTransfer }) => {
+    dropText.style.display = 'none';
+    
+    const { files } = dataTransfer;
+
+    for(let i=0;i<files.length;i++){
+        const currFile = files[i];
+
+        const fLabel = document.createElement('p');
+        fLabel.innerText = currFile.name;
+
+        dropArea.appendChild(fLabel);
+    }
+})
