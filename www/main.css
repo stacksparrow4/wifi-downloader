@@ -22,3 +22,24 @@ body, div {
 a {
     font-size: 2em;
 }
+
+p, h1 {
+    user-select: none;
+}
+
+#droparea {
+    width: calc(100% - 10px);
+    height: 100px;
+    border: 5px dashed grey;
+    margin-bottom: 10px;
+    display: flex;
+    transition: background-color 0.5s;
+}
+
+.highlight {
+    background-color: #ddd;
+}
+
+.centered {
+    margin:auto;
+}

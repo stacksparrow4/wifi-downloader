@@ -36,3 +36,27 @@ ipcRenderer.on('serverstopped', () => {
     startServerBtn.innerText = 'Start server';
     status.innerHTML = '';
 })
+
+const dropArea = document.getElementById('droparea');
+
+['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+    dropArea.addEventListener(eventName, preventDefaults, false);
+});
+
+function preventDefaults (e) {
+    e.preventDefault();
+    e.stopPropagation();
+}
+
+dropArea.addEventListener('dragenter', highlight, false);
+dropArea.addEventListener('dragover', highlight, false);
+dropArea.addEventListener('dragleave', unhighlight, false);
+dropArea.addEventListener('drop', unhighlight, false);
+
+function highlight() {
+    dropArea.classList.add('highlight');
+}
+
+function unhighlight() {
+    dropArea.classList.remove('highlight');
+}
