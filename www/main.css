@@ -1,0 +1,24 @@
+@font-face {
+    font-family: josefin;
+    src: url("fonts/JosefinSans-Regular.ttf");
+}
+
+* {
+    font-family: josefin;
+    text-align: center;
+}
+
+body {
+    width: calc(100% - 40px);
+    margin: 0;
+    padding: 20px;
+}
+
+body, div {
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    font-size: 2em;
+}

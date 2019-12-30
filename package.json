@@ -1,0 +1,16 @@
+{
+    "name": "wifidownloader2",
+    "version": "1.0.0",
+    "description": "Transfer files to any platform with a browser!",
+    "main": "index.js",
+    "scripts": {
+        "start": "npx electron .",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "author": "Moodragon46",
+    "license": "ISC",
+    "dependencies": {
+        "electron": "^7.1.7",
+        "express": "^4.17.1"
+    }
+}
