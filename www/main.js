@@ -27,7 +27,7 @@ ipcRenderer.on('serverstarted', (e, ip, port) => {
 
     const url = `${ip}:${port}`;
 
-    status.innerHTML = `<p>Server is now running. Go to:</p><a href="#">${url}</a><p>on any device that is connected to the same wifi network as you.</p>`;
+    status.innerHTML = `<p class="textcenter">Server is now running. Go to:</p><a class="textcenter" href="#">${url}</a><p class="textcenter">on any device that is connected to the same wifi network as you.</p>`;
 })
 
 ipcRenderer.on('serverstopped', () => {
@@ -62,6 +62,49 @@ function unhighlight() {
     dropArea.classList.remove('highlight');
 }
 
+function createP(className, txt){
+    const newP = document.createElement('p');
+    newP.className = className;
+    newP.innerText = txt;
+    return newP;
+}
+
+function createButton(className, txt, onclick){
+    const newB = document.createElement('button');
+    newB.className = className;
+    newB.innerText = txt;
+    newB.addEventListener('click', onclick);
+    return newB;
+}
+
+function createDiv(className, children){
+    const div = document.createElement('div');
+    div.className = className;
+
+    for(let i=0;i<children.length;i++){
+        div.appendChild(children[i]);
+    }
+
+    return div;
+}
+
+let addedFiles = [];
+
+function removeFile(name){
+    for(let i=0;i<addedFiles.length;i++){
+        if(addedFiles[i].name === name){
+            addedFiles.splice(i, 1);
+            dropArea.removeChild(dropArea.children[i+1]); // Offset by 1 for the initial element
+
+            if(addedFiles.length === 0){
+                dropText.style.display = 'block';
+            }
+
+            return;
+        }
+    }
+}
+
 dropArea.addEventListener('drop', ({ dataTransfer }) => {
     dropText.style.display = 'none';
     
@@ -70,9 +113,26 @@ dropArea.addEventListener('drop', ({ dataTransfer }) => {
     for(let i=0;i<files.length;i++){
         const currFile = files[i];
 
-        const fLabel = document.createElement('p');
-        fLabel.innerText = currFile.name;
+        const parts = currFile.name.split('.');
+        let type = 'folder';
+        let displayName = parts[0];
+        if(parts.length > 1){
+            type = parts.slice(1).join('.') + ' file';
+        }
+
+        const fLabel = createDiv('flex', [
+            createP('padded grow', displayName),
+            createP('padded', type),
+            createButton('removebutton', 'Remove', () => {
+                removeFile(currFile.name);
+            })
+        ]);
 
         dropArea.appendChild(fLabel);
+
+        addedFiles.push({
+            name: currFile.name,
+            filePath: currFile.path
+        })
     }
 })
