@@ -122,17 +122,3 @@ const menuTemplate = [
         label: 'Server'
     }
 ]
-if(process.env.NODE_ENV !== 'production'){
-    menuTemplate.push({
-        label: 'Dev',
-        submenu: [
-            {
-                label: 'Devtools',
-                accelerator: 'Ctrl+Shift+I',
-                click: (item, focusedWin) => {
-                    focusedWin.toggleDevTools();
-                }
-            }
-        ]
-    })
-}
