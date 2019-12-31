@@ -5,7 +5,7 @@
     "main": "index.js",
     "scripts": {
         "start": "npx electron .",
-        "build": "npx electron-packager .",
+        "build": "npx electron-packager . --appname \"Wifi Downloader\" --icon icon.ico --win32metadata.FileDescription \"Transfer files to any platform with a browser!\"",
         "test": "echo \"Error: no test specified\" && exit 1"
     },
     "author": "Moodragon46",
