@@ -14,10 +14,10 @@ startServerBtn.addEventListener('click', () => {
         ipcRenderer.send('stopserver');
         waitingForResp = true;
     }else {
-        ipcRenderer.send('startserver');
+        ipcRenderer.send('startserver', addedFiles);
         waitingForResp = true;
     }
-    startServerBtn.innerText = 'Starting server...';
+    startServerBtn.innerText = 'Copying files and starting server...';
 })
 
 ipcRenderer.on('serverstarted', (e, ip, port) => {
@@ -27,7 +27,7 @@ ipcRenderer.on('serverstarted', (e, ip, port) => {
 
     const url = `${ip}:${port}`;
 
-    status.innerHTML = `<p class="textcenter">Server is now running. Go to:</p><a class="textcenter" href="#">${url}</a><p class="textcenter">on any device that is connected to the same wifi network as you.</p>`;
+    status.innerHTML = `<p class="textcenter">Server is now running. Go to:</p><a class="textcenter" href="#">${url}</a><p class="textcenter">on any device that is connected to the same wifi network as you to download the above files.</p>`;
 })
 
 ipcRenderer.on('serverstopped', () => {
@@ -132,7 +132,8 @@ dropArea.addEventListener('drop', ({ dataTransfer }) => {
 
         addedFiles.push({
             name: currFile.name,
-            filePath: currFile.path
+            filePath: currFile.path,
+            isFolder: parts.length === 1
         })
     }
 })

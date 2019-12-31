@@ -3,6 +3,10 @@ const electron = require('electron');
 const path = require('path');
 const dns = require('dns');
 const os = require('os');
+const fs = require('fs');
+const rimraf = require('rimraf');
+const { ncp } = require('ncp');
+const { zip } = require('zip-a-folder');
 
 const { app, BrowserWindow, Menu, ipcMain } = electron;
 
@@ -17,12 +21,53 @@ function getIp(){
     })
 }
 
-ipcMain.on('startserver', () => {
+const downloadDir = path.join(__dirname, '/download/');
+const zipDir = path.join(__dirname, '/www/download.zip');
+
+async function copyOverFiles(filestocopy){
+    rimraf.sync(zipDir);
+
+    if(filestocopy.length === 1 && filestocopy[0].isFolder){
+        // There is just a single folder. Just zip that.
+        await zip(filestocopy[0].filePath, zipDir);
+    }else {
+        // Multiple files. Put them all into a dir and zip.
+        rimraf.sync(downloadDir); // Clean up just in case
+        fs.mkdirSync(downloadDir);
+
+        for(let i=0;i<filestocopy.length;i++){
+            const { name, filePath } = filestocopy[i];
+            await new Promise(res => {
+                ncp(filePath, path.join(downloadDir, name), err => {
+                    if(err) throw err;
+                    res();
+                });
+            });
+        }
+
+        await zip(downloadDir, zipDir);
+
+        rimraf.sync(downloadDir);
+    }
+}
+
+function exitApp(){
+    rimraf.sync(zipDir); // Clean up
+    app.quit();
+}
+
+ipcMain.on('startserver', async (e, filestocopy) => {
+    await copyOverFiles(filestocopy);
+
     const app = express();
     const port = 5000;
 
     app.get('/', (req, res) => {
         res.sendFile(path.join(__dirname, 'www/downloadpage.html'));
+    })
+
+    app.get('/download.zip', (req, res) => {
+        res.sendFile(zipDir);
     })
 
     server = app.listen(port, () => {
@@ -52,7 +97,7 @@ app.on('ready', () => {
 
     mainWin.on('closed', () => {
         mainWin = null;
-        app.quit();
+        exitApp();
     })
 
     mainWin.loadFile(path.join(__dirname, 'www/wifidownloader.html'));
@@ -68,7 +113,7 @@ const menuTemplate = [
             {
                 label: 'Quit',
                 click: () => {
-                    app.quit();
+                    exitApp();
                 }
             }
         ]

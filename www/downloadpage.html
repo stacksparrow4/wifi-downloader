@@ -2,9 +2,31 @@
 <html>
     <head>
         <title>Wifi Downloader</title>
+
+        <style>
+            body {
+                overflow: hidden;
+                display: flex;
+                width: 100vw;
+                height: 100vh;
+            }
+
+            p {
+                margin: auto;
+
+                font-size: 20px;
+                font-family: Arial, Helvetica, sans-serif;
+            }
+        </style>
     </head>
 
     <body>
-        <p>Your download will begin in a second. If it doesn't, try this direct link:</p>
+        <p>Your download will begin in a second. If it doesn't, try this direct link: <a id="downloadlink" href="download.zip">download</a>.</p>
+
+        <script>
+            window.onload = () => {
+                document.getElementById("downloadlink").click();
+            }
+        </script>
     </body>
 </html>
