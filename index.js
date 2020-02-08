@@ -7,19 +7,12 @@ const fs = require('fs');
 const rimraf = require('rimraf');
 const { ncp } = require('ncp');
 const { zip } = require('zip-a-folder');
+const getIp = require('./src/getip');
 
 const { app, BrowserWindow, Menu, ipcMain } = electron;
 
 let mainWin;
 let server;
-
-function getIp(){
-    return new Promise(res => {
-        dns.lookup(os.hostname(), function (err, add, fam) {
-            res(add);
-        })
-    })
-}
 
 const downloadDir = path.join(__dirname, '/download/');
 const zipDir = path.join(__dirname, '/www/download.zip');
